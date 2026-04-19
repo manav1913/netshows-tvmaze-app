@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import MovieCard from '../Components/MovieCard'
 
-const Home = () => {
-
+const Home = ({ search }) => {
   const [shows, setShows] = useState([])
 
-  useEffect (()=>{
-    const fetchShows = async () =>{
-      const res = await fetch(" https://api.tvmaze.com/shows")
+  useEffect(() => {
+    const fetchShows = async () => {
+      let url = "https://api.tvmaze.com/shows"
+
+      if (search) {
+        url = `https://api.tvmaze.com/search/shows?q=${search}`
+      }
+
+      const res = await fetch(url)
       const data = await res.json()
-      setShows(data)
+
+      if (search) {
+        setShows(data.map((item) => item.show))
+      } else {
+        setShows(data)
+      }
     }
+
     fetchShows()
-  },[])
-
-
+  }, [search])
 
   return (
-     <section className="home">
+    <section className="home">
       <div className="home-header">
         <h2>Featured Shows</h2>
         <p>Browse some popular series and discover what to watch next.</p>
