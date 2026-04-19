@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MovieCard from '../Components/MovieCard'
 
-const Home = ({ search }) => {
+const Home = ({ search, selectedGenre, favorites, setFavorites }) => {
   const [shows, setShows] = useState([])
 
   useEffect(() => {
@@ -25,16 +25,32 @@ const Home = ({ search }) => {
     fetchShows()
   }, [search])
 
+  const filteredShows =
+    selectedGenre === "All"
+      ? shows
+      : shows.filter((show) => show.genres.includes(selectedGenre))
+
   return (
     <section className="home">
       <div className="home-header">
-        <h2>Featured Shows</h2>
+        <h2>
+          {search
+            ? `Search Results for "${search}"`
+            : selectedGenre === "All"
+            ? "Featured Shows"
+            : `${selectedGenre} Shows`}
+        </h2>
         <p>Browse some popular series and discover what to watch next.</p>
       </div>
 
       <div className="shows-grid">
-        {shows.slice(0, 20).map((show) => (
-          <MovieCard key={show.id} show={show} />
+        {filteredShows.slice(0, 20).map((show) => (
+          <MovieCard
+            key={show.id}
+            show={show}
+            favorites={favorites}
+            setFavorites={setFavorites}
+          />
         ))}
       </div>
     </section>

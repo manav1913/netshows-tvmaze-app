@@ -1,10 +1,27 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const MovieCard = ({ show }) => {
+const MovieCard = ({ show, favorites, setFavorites }) => {
+  const isFavorite = favorites.some((item) => item.id === show.id)
+
+  const toggleFavorite = (e) => {
+    e.preventDefault()
+
+    if (isFavorite) {
+      const updatedFavorites = favorites.filter((item) => item.id !== show.id)
+      setFavorites(updatedFavorites)
+    } else {
+      setFavorites([...favorites, show])
+    }
+  }
+
   return (
     <Link to={`/show/${show.id}`} className="movie-link">
       <div className="movie-card">
+        <button className="fav-btn" onClick={toggleFavorite}>
+          {isFavorite ? "❤️" : "🤍"}
+        </button>
+
         <div className="movie-image">
           <img
             src={show.image?.medium || "https://via.placeholder.com/210x295"}
